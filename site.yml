@@ -20,3 +20,7 @@
     - users
     - firewall
     - ssh_hardening
+    - fail2ban
+    - updates
+    - docker
+    - node_exporter

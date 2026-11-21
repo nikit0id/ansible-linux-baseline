@@ -1,0 +1,19 @@
+---
+- name: Install unattended security updates
+  ansible.builtin.apt:
+    name: unattended-upgrades
+    state: present
+
+- name: Schedule daily package refreshes and unattended upgrades
+  ansible.builtin.copy:
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    content: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
+    mode: "0644"
+
+- name: Enable the Ubuntu upgrade timer
+  ansible.builtin.systemd_service:
+    name: apt-daily-upgrade.timer
+    state: started
+    enabled: true

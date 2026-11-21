@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+if [[ -d .venv/bin ]]; then export PATH="$PWD/.venv/bin:$PATH"; fi
+temp=$(mktemp -d)
+trap 'rm -rf "$temp"' EXIT
+ssh-keygen -q -t ed25519 -N '' -f "$temp/operator"
+BASELINE_PUBLIC_KEY=$(cat "$temp/operator.pub")
+export BASELINE_PUBLIC_KEY
+molecule test
