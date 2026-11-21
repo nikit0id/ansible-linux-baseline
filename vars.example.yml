@@ -1,0 +1,4 @@
+---
+# Encrypt the populated file before storing it under inventory group_vars.
+# Use only when the remote sudo configuration requires a become password.
+ansible_become_password: "{{ vault_become_password }}"
