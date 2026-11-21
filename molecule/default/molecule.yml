@@ -16,6 +16,7 @@ provisioner:
   inventory:
     group_vars:
       baseline:
+        ansible_become: false
         baseline_operator: labops
         baseline_public_key: "{{ lookup('ansible.builtin.env', 'BASELINE_PUBLIC_KEY', default=undef()) }}"
 verifier:
