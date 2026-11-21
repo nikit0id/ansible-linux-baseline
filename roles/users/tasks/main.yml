@@ -1,0 +1,23 @@
+---
+- name: Install operator prerequisites
+  ansible.builtin.apt:
+    name: [sudo, openssh-server]
+    state: present
+
+- name: Create the managed operator
+  ansible.builtin.user:
+    name: "{{ baseline_operator }}"
+    shell: /bin/bash
+    create_home: true
+
+- name: Install the operator public key
+  ansible.posix.authorized_key:
+    user: "{{ baseline_operator }}"
+    key: "{{ baseline_public_key }}"
+
+- name: Authorize privilege escalation for the key-based operator
+  ansible.builtin.copy:
+    dest: "/etc/sudoers.d/90-{{ baseline_operator }}"
+    content: "{{ baseline_operator }} ALL=(ALL:ALL) NOPASSWD: ALL\n"
+    mode: "0440"
+    validate: /usr/sbin/visudo -cf %s

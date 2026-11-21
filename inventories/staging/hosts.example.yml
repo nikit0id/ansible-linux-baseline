@@ -1,0 +1,6 @@
+---
+baseline:
+  hosts:
+    staging:
+      ansible_host: staging.example.org
+      ansible_user: ubuntu

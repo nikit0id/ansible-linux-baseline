@@ -1,0 +1,24 @@
+---
+- name: Install UFW
+  ansible.builtin.apt:
+    name: ufw
+    state: present
+
+- name: Allow management SSH before enabling the firewall
+  community.general.ufw:
+    rule: allow
+    port: "22"
+    proto: tcp
+
+- name: Permit explicitly configured application ports
+  community.general.ufw:
+    rule: allow
+    port: "{{ item | string }}"
+    proto: tcp
+  loop: "{{ baseline_public_tcp_ports | default([]) }}"
+
+- name: Deny incoming connections by default
+  community.general.ufw:
+    state: enabled
+    policy: deny
+    direction: incoming

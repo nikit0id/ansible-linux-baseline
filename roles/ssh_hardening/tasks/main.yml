@@ -1,0 +1,17 @@
+---
+- name: Configure key-only login and disable root SSH
+  ansible.builtin.copy:
+    dest: /etc/ssh/sshd_config.d/00-baseline.conf
+    content: |
+      PubkeyAuthentication yes
+      PasswordAuthentication no
+      KbdInteractiveAuthentication no
+      PermitRootLogin no
+    mode: "0644"
+  notify: Validate and reload SSH
+
+- name: Start the SSH service
+  ansible.builtin.systemd_service:
+    name: ssh
+    state: started
+    enabled: true

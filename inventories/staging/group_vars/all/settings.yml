@@ -1,0 +1,4 @@
+---
+baseline_operator: ops
+baseline_public_key: "{{ lookup('ansible.builtin.env', 'BASELINE_PUBLIC_KEY', default=undef()) }}"
+baseline_public_tcp_ports: [80, 443]

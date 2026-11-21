@@ -1,0 +1,6 @@
+---
+baseline:
+  hosts:
+    production:
+      ansible_host: production.example.org
+      ansible_user: ubuntu

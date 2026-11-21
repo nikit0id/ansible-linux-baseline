@@ -1,0 +1,6 @@
+.venv/
+.ansible/
+.molecule/
+.env
+.vault-pass*
+inventories/*/hosts.local.yml
