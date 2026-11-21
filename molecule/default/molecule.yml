@@ -6,7 +6,8 @@ platforms:
     image: jrei/systemd-ubuntu:24.04@sha256:9018448b37c6aab4fe4a9279eef374bedefff27980a2a4faf4df05980fb8d699
     pre_build_image: true
     privileged: true
-    cgroupns_mode: private
+    cgroupns_mode: host
+    volumes: ["/sys/fs/cgroup:/sys/fs/cgroup:rw"]
     tmpfs: [/run, /run/lock, /tmp]
     command: /lib/systemd/systemd
     groups: [baseline]
