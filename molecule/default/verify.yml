@@ -1,0 +1,40 @@
+---
+- name: Verify the effective baseline
+  hosts: baseline
+  tasks:
+    - name: Inspect effective SSH configuration
+      ansible.builtin.command: /usr/sbin/sshd -T
+      changed_when: false
+      register: ssh_config
+
+    - name: Check operator and service behavior
+      ansible.builtin.command:
+        argv: "{{ item }}"
+      changed_when: false
+      loop:
+        - [id, labops]
+        - [sudo, -l, -U, labops]
+        - [fail2ban-client, status, sshd]
+        - [systemctl, is-active, apt-daily-upgrade.timer]
+        - [docker, info]
+        - [docker, compose, version]
+
+    - name: Inspect the firewall
+      ansible.builtin.command: ufw status
+      changed_when: false
+      register: firewall_state
+
+    - name: Scrape node exporter
+      ansible.builtin.uri:
+        url: http://127.0.0.1:9100/metrics
+        return_content: true
+      register: scrape
+
+    - name: Assert host security and monitoring properties
+      ansible.builtin.assert:
+        that:
+          - "'permitrootlogin no' in ssh_config.stdout_lines"
+          - "'passwordauthentication no' in ssh_config.stdout_lines"
+          - "'Status: active' in firewall_state.stdout"
+          - "'22/tcp' in firewall_state.stdout"
+          - "'node_cpu_seconds_total' in scrape.content"

@@ -1,0 +1,3 @@
+---
+- name: Apply the same playbook used on Ubuntu servers
+  ansible.builtin.import_playbook: ../../site.yml

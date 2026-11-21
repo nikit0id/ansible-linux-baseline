@@ -15,3 +15,6 @@ jobs:
           ansible-galaxy collection install -r requirements.yml
           ansible-lint site.yml roles
           ansible-playbook -i inventories/staging/hosts.example.yml site.yml --syntax-check
+          shellcheck scripts/*
+      - name: Exercise all roles and verify idempotence on Ubuntu
+        run: scripts/test

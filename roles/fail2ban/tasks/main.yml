@@ -1,0 +1,22 @@
+---
+- name: Install Fail2ban with its journal reader
+  ansible.builtin.apt:
+    name: [fail2ban, python3-systemd]
+    state: present
+
+- name: Enable the SSH jail against the system journal
+  ansible.builtin.copy:
+    dest: /etc/fail2ban/jail.d/sshd.local
+    content: |
+      [sshd]
+      enabled = true
+      backend = systemd
+      banaction = ufw
+    mode: "0644"
+  notify: Restart Fail2ban
+
+- name: Start and enable Fail2ban
+  ansible.builtin.systemd_service:
+    name: fail2ban
+    enabled: true
+    state: started
